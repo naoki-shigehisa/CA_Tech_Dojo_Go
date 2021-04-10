@@ -1,0 +1,9 @@
+version: '3'
+services:
+  dojo:
+    build: .
+    command: go run main.go
+    volumes:
+      - .:/app 
+    ports:
+      - 1323:1323

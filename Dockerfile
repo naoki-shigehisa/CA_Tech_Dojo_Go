@@ -4,9 +4,8 @@ ENV GO111MODULE=on
 
 RUN apk update && \
     apk add emacs curl git && \
-    go get github.com/pilu/fresh && \
-    go get github.com/gonum/floats && \
-    go get github.com/gonum/matrix
+    go get github.com/go-sql-driver/mysql && \
+    go get github.com/jinzhu/gorm
 
 WORKDIR /app
 ADD . /app

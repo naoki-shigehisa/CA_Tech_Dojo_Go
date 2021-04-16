@@ -7,9 +7,39 @@ import (
   _ "github.com/go-sql-driver/mysql"
 )
 
+type User struct {
+	gorm.Model
+	Token string
+	Name string
+}
+
 func main() {
 	db := sqlConnect()
+  	db.AutoMigrate(&User{})
   	defer db.Close()
+	
+	create()
+	users := get()
+
+	fmt.Println(users)
+}
+
+func create() {
+	db := sqlConnect()
+	token := "adgahor2ka01"
+    name := "Yamada"
+    fmt.Println("create user " + name + " with token " + token)
+    db.Create(&User{Token: token, Name: name})
+    defer db.Close()
+}
+
+func get() []User{
+	db := sqlConnect()
+    var users []User
+    db.Order("created_at asc").Find(&users)
+    defer db.Close()
+
+	return users
 }
 
 func sqlConnect() (database *gorm.DB) {

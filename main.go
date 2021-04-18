@@ -18,10 +18,15 @@ func main() {
   	db.AutoMigrate(&User{})
   	defer db.Close()
 	
-	create()
+	//create()
 	users := get()
 
-	fmt.Println(users)
+	fmt.Println(users[0].Model.ID)
+	fmt.Println(users[0].Model.CreatedAt)
+	fmt.Println(users[0].Model.UpdatedAt)
+	fmt.Println(users[0].Model.DeletedAt)
+	fmt.Println(users[0].Token)
+	fmt.Println(users[0].Name)
 }
 
 func create() {

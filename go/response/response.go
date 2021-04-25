@@ -14,7 +14,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetUsers(w http.ResponseWriter, r *http.Request){
-	users := database.Get()
+	users := database.GetUsers()
 
 	var buf bytes.Buffer
 	enc := json.NewEncoder(&buf)

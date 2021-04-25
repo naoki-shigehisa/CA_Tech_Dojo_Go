@@ -5,33 +5,9 @@ import (
 	"time"
 	"github.com/jinzhu/gorm"
 	_ "github.com/go-sql-driver/mysql"
-  )
+)
 
-type User struct {
-	gorm.Model `json:"info"`
-	Token string `json:"token"`
-	Name string `json:"name"`
-}
-
-func Create() {
-	db := SqlConnect()
-	token := "adgahor2ka01"
-    name := "Yamada"
-    fmt.Println("create user " + name + " with token " + token)
-    db.Create(&User{Token: token, Name: name})
-    defer db.Close()
-}
-
-func Get() []User{
-	db := SqlConnect()
-    var users []User
-    db.Order("created_at asc").Find(&users)
-    defer db.Close()
-
-	return users
-}
-
-func SqlConnect() (database *gorm.DB) {
+func sqlConnect() (database *gorm.DB) {
 	DBMS := "mysql"
 	USER := "go_test"
 	PASS := "password"

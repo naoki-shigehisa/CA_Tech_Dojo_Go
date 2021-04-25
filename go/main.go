@@ -1,26 +1,9 @@
 package main
 
 import (
-  "fmt"
-  "bytes"
-  "log"
-  "encoding/json"
   "net/http"
-  "dojo/database"
+  "dojo/response"
 )
-
-func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Hello, HTTPサーバ")
-}
-
-func getUsers(w http.ResponseWriter, r *http.Request){
-	users := database.Get()
-
-	var buf bytes.Buffer
-	enc := json.NewEncoder(&buf)
-	if err := enc.Encode(users); err != nil {log.Fatal(err)}
-	fmt.Fprint(w, buf.String())
-}
 
 func main() {
 	// db := database.SqlConnect()
@@ -37,7 +20,7 @@ func main() {
 	// fmt.Println(users[0].Token)
 	// fmt.Println(users[0].Name)
 
-	http.HandleFunc("/", handler)
-	http.HandleFunc("/users", getUsers)
+	http.HandleFunc("/", response.Handler)
+	http.HandleFunc("/users", response.GetUsers)
 	http.ListenAndServe(":1323", nil)
 }

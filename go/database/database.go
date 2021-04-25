@@ -8,9 +8,9 @@ import (
   )
 
 type User struct {
-	gorm.Model
-	Token string
-	Name string
+	gorm.Model `json:"info"`
+	Token string `json:"token"`
+	Name string `json:"name"`
 }
 
 func Create() {

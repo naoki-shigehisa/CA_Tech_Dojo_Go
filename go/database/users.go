@@ -29,3 +29,12 @@ func GetUsers() []User{
 
 	return users
 }
+
+func GetUser(id int) User{
+	db := sqlConnect()
+    var users []User
+    db.Where("id = ?", id).Find(&users)
+    defer db.Close()
+
+	return users[0]
+}

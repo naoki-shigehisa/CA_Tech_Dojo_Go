@@ -22,5 +22,6 @@ func main() {
 
 	http.HandleFunc("/", response.Handler)
 	http.HandleFunc("/users", response.GetUsers)
+	http.HandleFunc("/user", response.GetUser)
 	http.ListenAndServe(":1323", nil)
 }

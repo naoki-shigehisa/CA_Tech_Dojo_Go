@@ -33,3 +33,12 @@ func GetUser(w http.ResponseWriter, r *http.Request){
 	if err := enc.Encode(users); err != nil {log.Fatal(err)}
 	fmt.Fprint(w, buf.String())
 }
+
+func CreateUser(w http.ResponseWriter, r *http.Request){
+	token := r.FormValue("token")
+	name := r.FormValue("name")
+
+	database.CreateUser(token, name)
+
+	fmt.Fprint(w, "{'status': 'OK'}")
+}

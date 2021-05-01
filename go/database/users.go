@@ -12,10 +12,8 @@ type User struct {
 	Name string `json:"name"`
 }
 
-func CreateUser() {
+func CreateUser(token string, name string) {
 	db := sqlConnect()
-	token := "adgahor2ka01"
-    name := "Yamada"
     fmt.Println("create user " + name + " with token " + token)
     db.Create(&User{Token: token, Name: name})
     defer db.Close()

@@ -32,12 +32,14 @@ func makeRandomStr(digit uint32) (string, error) {
     return result, nil
 }
 
-func CreateUser(name string) {
+func CreateUser(name string) string{
 	token, _ := makeRandomStr(10)
 	db := sqlConnect()
     fmt.Println("create user " + name + " with token " + token)
     db.Create(&User{Token: token, Name: name})
     defer db.Close()
+
+	return token
 }
 
 func GetUsers() []User{

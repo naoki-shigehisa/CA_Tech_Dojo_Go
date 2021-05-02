@@ -25,13 +25,17 @@ func GetUsers(w http.ResponseWriter, r *http.Request){
 }
 
 func GetUser(w http.ResponseWriter, r *http.Request){
-	id, _ := strconv.Atoi(r.FormValue("id"))
-	users := database.GetUser(id)
+	if r.Method == "GET"{
+		id, _ := strconv.Atoi(r.FormValue("id"))
+		users := database.GetUser(id)
 
-	var buf bytes.Buffer
-	enc := json.NewEncoder(&buf)
-	if err := enc.Encode(users); err != nil {log.Fatal(err)}
-	fmt.Fprint(w, buf.String())
+		var buf bytes.Buffer
+		enc := json.NewEncoder(&buf)
+		if err := enc.Encode(users); err != nil {log.Fatal(err)}
+		fmt.Fprint(w, buf.String())
+	}else{
+		fmt.Fprint(w, `{"status": "method not allow"}`)
+	}
 }
 
 func CreateUser(w http.ResponseWriter, r *http.Request){

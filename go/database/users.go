@@ -51,10 +51,19 @@ func GetUsers() []User{
 	return users
 }
 
-func GetUser(id int) User{
+// func GetUserById(id int) User{
+// 	db := sqlConnect()
+//     var users []User
+//     db.Where("id = ?", id).Find(&users)
+//     defer db.Close()
+
+// 	return users[0]
+// }
+
+func GetUserByToken(token string) User{
 	db := sqlConnect()
     var users []User
-    db.Where("id = ?", id).Find(&users)
+    db.Where("token = ?", token).Find(&users)
     defer db.Close()
 
 	return users[0]

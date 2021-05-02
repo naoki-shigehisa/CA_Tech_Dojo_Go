@@ -22,7 +22,7 @@ func main() {
 
 	http.HandleFunc("/", response.Handler)
 	http.HandleFunc("/users", response.GetUsers)
-	http.HandleFunc("/user", response.GetUser)
+	http.HandleFunc("/user", response.GetUserByToken)
 	http.HandleFunc("/createUser", response.CreateUser)
 	http.ListenAndServe(":1323", nil)
 }

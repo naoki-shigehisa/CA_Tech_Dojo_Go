@@ -35,10 +35,9 @@ func GetUser(w http.ResponseWriter, r *http.Request){
 }
 
 func CreateUser(w http.ResponseWriter, r *http.Request){
-	token := r.FormValue("token")
 	name := r.FormValue("name")
 
-	database.CreateUser(token, name)
+	database.CreateUser(name)
 
 	fmt.Fprint(w, "{'status': 'OK'}")
 }

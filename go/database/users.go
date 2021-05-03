@@ -8,12 +8,14 @@ import (
 	_ "github.com/go-sql-driver/mysql"
   )
 
+// ユーザー情報用構造体
 type User struct {
 	gorm.Model `json:"info"`
 	Token string `json:"token"`
 	Name string `json:"name"`
 }
 
+// tokenを乱数で生成
 func makeRandomStr(digit uint32) (string, error) {
     const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
@@ -32,6 +34,7 @@ func makeRandomStr(digit uint32) (string, error) {
     return result, nil
 }
 
+// 新規ユーザーを作成
 func CreateUser(name string) string{
 	token, _ := makeRandomStr(10)
 	db := sqlConnect()
@@ -42,6 +45,7 @@ func CreateUser(name string) string{
 	return token
 }
 
+// ユーザー情報を更新
 func UpdateUser(token string, name string){
 	db := sqlConnect()
 
@@ -55,6 +59,7 @@ func UpdateUser(token string, name string){
     defer db.Close()
 }
 
+// 全てのユーザーを取得
 func GetUsers() []User{
 	db := sqlConnect()
     var users []User
@@ -73,6 +78,7 @@ func GetUsers() []User{
 // 	return users[0]
 // }
 
+// token指定でユーザーを取得
 func GetUserByToken(token string) (User, error){
 	db := sqlConnect()
     var users []User

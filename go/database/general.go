@@ -7,6 +7,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+// データベースに接続
 func sqlConnect() (database *gorm.DB) {
 	DBMS := "mysql"
 	USER := "go_test"

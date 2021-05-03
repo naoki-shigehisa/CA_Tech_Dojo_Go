@@ -42,6 +42,19 @@ func CreateUser(name string) string{
 	return token
 }
 
+func UpdateUser(token string, name string){
+	db := sqlConnect()
+
+    var userBefore User
+    userBefore.Token = token
+	userAfter := userBefore
+
+	db.First(&userBefore)
+	userAfter.Name = name
+	db.Model(&userBefore).Update(&userAfter)
+    defer db.Close()
+}
+
 func GetUsers() []User{
 	db := sqlConnect()
     var users []User

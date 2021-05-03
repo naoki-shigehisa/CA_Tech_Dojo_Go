@@ -24,5 +24,6 @@ func main() {
 	http.HandleFunc("/users", response.GetUsers)
 	http.HandleFunc("/user/get", response.GetUserByToken)
 	http.HandleFunc("/user/create", response.CreateUser)
+	http.HandleFunc("/user/update", response.UpdateUser)
 	http.ListenAndServe(":1323", nil)
 }

@@ -65,3 +65,19 @@ func CreateUser(w http.ResponseWriter, r *http.Request){
 		http.Error(w, fmt.Sprintf(`{"status": "method not allow"}`) , 503)
 	}
 }
+
+func UpdateUser(w http.ResponseWriter, r *http.Request){
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	if r.Method == "PUT"{
+		if token := r.FormValue("x-token"); token == "" {
+			http.Error(w, fmt.Sprintf(`{"status": "missing required parameter 'x-token'"}`) , 503)
+		}else if name := r.FormValue("name"); name == "" {
+			http.Error(w, fmt.Sprintf(`{"status": "missing required parameter 'name'"}`) , 503)
+		}else{
+			database.UpdateUser(token, name)
+			fmt.Fprint(w, `{"status": "success"}`)
+		}
+	}else{
+		http.Error(w, fmt.Sprintf(`{"status": "method not allow"}`) , 503)
+	}
+}

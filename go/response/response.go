@@ -39,27 +39,29 @@ func GetUsers(w http.ResponseWriter, r *http.Request){
 // }
 
 func GetUserByToken(w http.ResponseWriter, r *http.Request){
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	if r.Method == "GET"{
 		if token := r.FormValue("x-token"); token == "" {
-			fmt.Fprint(w, `{"status": "missing required parameter 'x-token'"}`)
+			http.Error(w, fmt.Sprintf(`{"status": "missing required parameter 'x-token'"}`) , 503)
 		}else{
 			user := database.GetUserByToken(token)
 			fmt.Fprint(w, `{"name": "` + user.Name + `"}`)
 		}
 	}else{
-		fmt.Fprint(w, `{"status": "method not allow"}`)
+		http.Error(w, fmt.Sprintf(`{"status": "method not allow"}`) , 503)
 	}
 }
 
 func CreateUser(w http.ResponseWriter, r *http.Request){
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	if r.Method == "POST"{
 		if name := r.FormValue("name"); name == "" {
-			fmt.Fprint(w, `{"status": "missing required parameter 'name'"}`)
+			http.Error(w, fmt.Sprintf(`{"status": "missing required parameter 'name'"}`) , 503)
 		}else{
 			token := database.CreateUser(name)
 			fmt.Fprint(w, `{"token": "` + token + `"}`)
 		}
 	}else{
-		fmt.Fprint(w, `{"status": "method not allow"}`)
+		http.Error(w, fmt.Sprintf(`{"status": "method not allow"}`) , 503)
 	}
 }

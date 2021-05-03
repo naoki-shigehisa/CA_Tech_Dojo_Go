@@ -36,8 +36,15 @@ func makeRandomStr(digit uint32) (string, error) {
 
 // 新規ユーザーを作成
 func CreateUser(name string) string{
-	token, _ := makeRandomStr(10)
 	db := sqlConnect()
+
+	// 重複しないようにtokenを生成
+	token, _ := makeRandomStr(10)
+	var users []User
+	for db.Where("token = ?", token).Find(&users); len(users) != 0; db.Where("token = ?", token).Find(&users){
+		token, _ = makeRandomStr(10)
+	}
+
     fmt.Println("create user " + name + " with token " + token)
     db.Create(&User{Token: token, Name: name})
     defer db.Close()

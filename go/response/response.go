@@ -44,8 +44,11 @@ func GetUserByToken(w http.ResponseWriter, r *http.Request){
 		if token := r.FormValue("x-token"); token == "" {
 			http.Error(w, fmt.Sprintf(`{"status": "missing required parameter 'x-token'"}`) , 503)
 		}else{
-			user := database.GetUserByToken(token)
-			fmt.Fprint(w, `{"name": "` + user.Name + `"}`)
+			if user, err := database.GetUserByToken(token); err == nil{
+				fmt.Fprint(w, `{"name": "` + user.Name + `"}`)
+			}else{
+				http.Error(w, fmt.Sprintf(`{"status": "` + err.Error() + `"}`) , 503)
+			}
 		}
 	}else{
 		http.Error(w, fmt.Sprintf(`{"status": "method not allow"}`) , 503)

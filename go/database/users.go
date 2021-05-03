@@ -73,11 +73,15 @@ func GetUsers() []User{
 // 	return users[0]
 // }
 
-func GetUserByToken(token string) User{
+func GetUserByToken(token string) (User, error){
 	db := sqlConnect()
     var users []User
-    db.Where("token = ?", token).Find(&users)
-    defer db.Close()
-
-	return users[0]
+    if db.Where("token = ?", token).Find(&users); len(users) != 0 {
+        defer db.Close()
+	    return users[0], nil
+    }else{
+        defer db.Close()
+        var user User
+        return user, errors.New("user not found")
+    }
 }

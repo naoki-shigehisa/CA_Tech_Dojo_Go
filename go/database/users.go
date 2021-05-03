@@ -53,17 +53,22 @@ func CreateUser(name string) string{
 }
 
 // ユーザー情報を更新
-func UpdateUser(token string, name string){
+func UpdateUser(token string, name string) error{
 	db := sqlConnect()
 
     var userBefore User
-    userBefore.Token = token
 	userAfter := userBefore
+	db.First(&userBefore, "token=?", token)
 
-	db.First(&userBefore)
-	userAfter.Name = name
-	db.Model(&userBefore).Update(&userAfter)
-    defer db.Close()
+	if userBefore.Model.ID != 0{
+		userAfter.Name = name
+		db.Model(&userBefore).Update(&userAfter)
+    	defer db.Close()
+		return nil
+	}else{
+		defer db.Close()
+		return errors.New("user not found")
+	}
 }
 
 // 全てのユーザーを取得

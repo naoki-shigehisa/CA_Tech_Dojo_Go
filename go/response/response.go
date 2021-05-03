@@ -102,9 +102,12 @@ func UpdateUser(w http.ResponseWriter, r *http.Request){
 			http.Error(w, fmt.Sprintf(`{"status": "missing required parameter 'name'"}`) , 503)
 		}else{
 			// ユーザー情報更新
-			database.UpdateUser(token, name)
-			// 出力
-			fmt.Fprint(w, `{"status": "success"}`)
+			if err := database.UpdateUser(token, name); err == nil{
+				// 出力
+				fmt.Fprint(w, `{"status": "success"}`)
+			}else{
+				http.Error(w, fmt.Sprintf(`{"status": "` + err.Error() + `"}`) , 503)
+			}
 		}
 	}else{
 		http.Error(w, fmt.Sprintf(`{"status": "method not allow"}`) , 503)

@@ -11,6 +11,11 @@ import (
 	"dojo/database"
 )
 
+func httpError(w http.ResponseWriter, content string, code int) {
+	w.WriteHeader(code)
+	fmt.Fprint(w, content)
+}
+
 func Handler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "Hello, HTTPサーバ")
 }
@@ -57,13 +62,13 @@ func GetUserByToken(w http.ResponseWriter, r *http.Request){
 				// 出力
 				fmt.Fprint(w, `{"name": "` + user.Name + `"}`)
 			}else{
-				http.Error(w, fmt.Sprintf(`{"status": "` + err.Error() + `"}`) , 503)
+				httpError(w, `{"status": "` + err.Error() + `"}`, 500)
 			}
 		}else{
-			http.Error(w, fmt.Sprintf(`{"status": "missing required parameter 'x-token'"}`) , 503)
+			httpError(w, `{"status": "missing required parameter 'x-token'"}`, 500)
 		}
 	}else{
-		http.Error(w, fmt.Sprintf(`{"status": "method not allow"}`) , 503)
+		httpError(w, `{"status": "method not allow"}`, 500)
 	}
 }
 
@@ -81,10 +86,10 @@ func CreateUser(w http.ResponseWriter, r *http.Request){
 			// tokenを出力
 			fmt.Fprint(w, `{"token": "` + token + `"}`)
 		}else{
-			http.Error(w, fmt.Sprintf(`{"status": "missing required parameter 'name'"}`) , 503)
+			httpError(w, `{"status": "missing required parameter 'name'"}`, 500)
 		}
 	}else{
-		http.Error(w, fmt.Sprintf(`{"status": "method not allow"}`) , 503)
+		httpError(w, `{"status": "method not allow"}`, 500)
 	}
 }
 
@@ -96,20 +101,20 @@ func UpdateUser(w http.ResponseWriter, r *http.Request){
 	if r.Method == "PUT"{
 		// パラメータtokenが存在するかどうかを判定
 		if token := r.FormValue("x-token"); token == "" {
-			http.Error(w, fmt.Sprintf(`{"status": "missing required parameter 'x-token'"}`) , 503)
+			httpError(w, `{"status": "missing required parameter 'x-token'"}`, 500)
 		// パラメータnameが存在するかどうかを判定
 		}else if name := r.FormValue("name"); name == "" {
-			http.Error(w, fmt.Sprintf(`{"status": "missing required parameter 'name'"}`) , 503)
+			httpError(w, `{"status": "missing required parameter 'name'"}`, 500)
 		}else{
 			// ユーザー情報更新
 			if err := database.UpdateUser(token, name); err == nil{
 				// 出力
 				fmt.Fprint(w, `{"status": "success"}`)
 			}else{
-				http.Error(w, fmt.Sprintf(`{"status": "` + err.Error() + `"}`) , 503)
+				httpError(w, `{"status": "` + err.Error() + `"}`, 500)
 			}
 		}
 	}else{
-		http.Error(w, fmt.Sprintf(`{"status": "method not allow"}`) , 503)
+		httpError(w, `{"status": "method not allow"}`, 500)
 	}
 }

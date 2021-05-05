@@ -55,22 +55,21 @@ func GetUserByToken(w http.ResponseWriter, r *http.Request){
 	// headerの設定
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 
-	// メソッドがGETか判定
-	if r.Method == "GET"{
-		// パラメータx-tokenが存在するかどうかを判定
-		if token := r.FormValue("x-token"); token != "" {
-			// userが見つかるがどうかを判定
-			if user, err := database.GetUserByToken(token); err == nil{
-				// 出力
-				fmt.Fprint(w, `{"name": "` + user.Name + `"}`)
-			}else{
-				httpError(w, err.Error(), 500)
-			}
-		}else{
-			httpError(w, "missing required parameter 'x-token'", 500)
-		}
-	}else{
+	// メソッドとパラメータを判定
+	switch {
+	case r.Method != "GET":
 		httpError(w, "method not allow", 500)
+	case r.FormValue("x-token") == "":
+		httpError(w, "missing required parameter 'x-token'", 500)
+	default:
+		token := r.FormValue("x-token")
+		// userが見つかるがどうかを判定
+		if user, err := database.GetUserByToken(token); err == nil{
+			// 出力
+			fmt.Fprint(w, `{"name": "` + user.Name + `"}`)
+		}else{
+			httpError(w, err.Error(), 500)
+		}
 	}
 }
 
@@ -79,19 +78,18 @@ func CreateUser(w http.ResponseWriter, r *http.Request){
 	// headerの設定
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 
-	// メソッドがPOSTかどうかを判定
-	if r.Method == "POST"{
-		// パラメータnameが存在するかどうかを判定
-		if name := r.FormValue("name"); name != "" {
-			// ユーザーを作成
-			token := database.CreateUser(name)
-			// tokenを出力
-			fmt.Fprint(w, `{"token": "` + token + `"}`)
-		}else{
-			httpError(w, "missing required parameter 'name'", 500)
-		}
-	}else{
+	// メソッドとパラメータを判定
+	switch {
+	case r.Method != "POST":
 		httpError(w, "method not allow", 500)
+	case r.FormValue("name") == "":
+		httpError(w, "missing required parameter 'name'", 500)
+	default:
+		name := r.FormValue("name")
+		// ユーザーを作成
+		token := database.CreateUser(name)
+		// tokenを出力
+		fmt.Fprint(w, `{"token": "` + token + `"}`)
 	}
 }
 

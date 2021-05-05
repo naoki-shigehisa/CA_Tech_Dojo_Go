@@ -11,7 +11,9 @@ import (
 	"dojo/database"
 )
 
-func httpError(w http.ResponseWriter, content string, code int) {
+// エラー出力
+func httpError(w http.ResponseWriter, status string, code int) {
+	content := `{"status": "` + status + `"}`
 	w.WriteHeader(code)
 	fmt.Fprint(w, content)
 }
@@ -62,13 +64,13 @@ func GetUserByToken(w http.ResponseWriter, r *http.Request){
 				// 出力
 				fmt.Fprint(w, `{"name": "` + user.Name + `"}`)
 			}else{
-				httpError(w, `{"status": "` + err.Error() + `"}`, 500)
+				httpError(w, err.Error(), 500)
 			}
 		}else{
-			httpError(w, `{"status": "missing required parameter 'x-token'"}`, 500)
+			httpError(w, "missing required parameter 'x-token'", 500)
 		}
 	}else{
-		httpError(w, `{"status": "method not allow"}`, 500)
+		httpError(w, "method not allow", 500)
 	}
 }
 
@@ -86,10 +88,10 @@ func CreateUser(w http.ResponseWriter, r *http.Request){
 			// tokenを出力
 			fmt.Fprint(w, `{"token": "` + token + `"}`)
 		}else{
-			httpError(w, `{"status": "missing required parameter 'name'"}`, 500)
+			httpError(w, "missing required parameter 'name'", 500)
 		}
 	}else{
-		httpError(w, `{"status": "method not allow"}`, 500)
+		httpError(w, "method not allow", 500)
 	}
 }
 
@@ -101,20 +103,20 @@ func UpdateUser(w http.ResponseWriter, r *http.Request){
 	if r.Method == "PUT"{
 		// パラメータtokenが存在するかどうかを判定
 		if token := r.FormValue("x-token"); token == "" {
-			httpError(w, `{"status": "missing required parameter 'x-token'"}`, 500)
+			httpError(w, "missing required parameter 'x-token'", 500)
 		// パラメータnameが存在するかどうかを判定
 		}else if name := r.FormValue("name"); name == "" {
-			httpError(w, `{"status": "missing required parameter 'name'"}`, 500)
+			httpError(w, "missing required parameter 'name'", 500)
 		}else{
 			// ユーザー情報更新
 			if err := database.UpdateUser(token, name); err == nil{
 				// 出力
 				fmt.Fprint(w, `{"status": "success"}`)
 			}else{
-				httpError(w, `{"status": "` + err.Error() + `"}`, 500)
+				httpError(w, err.Error(), 500)
 			}
 		}
 	}else{
-		httpError(w, `{"status": "method not allow"}`, 500)
+		httpError(w, "method not allow", 500)
 	}
 }

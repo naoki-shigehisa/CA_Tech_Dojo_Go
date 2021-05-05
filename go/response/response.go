@@ -97,24 +97,23 @@ func UpdateUser(w http.ResponseWriter, r *http.Request){
 	// headerの設定
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 
-	// メソッドがPUTかどうかを判定
-	if r.Method == "PUT"{
-		// パラメータtokenが存在するかどうかを判定
-		if token := r.FormValue("x-token"); token == "" {
-			httpError(w, "missing required parameter 'x-token'", 500)
-		// パラメータnameが存在するかどうかを判定
-		}else if name := r.FormValue("name"); name == "" {
-			httpError(w, "missing required parameter 'name'", 500)
-		}else{
-			// ユーザー情報更新
-			if err := database.UpdateUser(token, name); err == nil{
-				// 出力
-				fmt.Fprint(w, `{"status": "success"}`)
-			}else{
-				httpError(w, err.Error(), 500)
-			}
-		}
-	}else{
+	// メソッドとパラメータを判定
+	switch {
+	case r.Method != "PUT":
 		httpError(w, "method not allow", 500)
+	case r.FormValue("x-token") == "":
+		httpError(w, "missing required parameter 'x-token'", 500)
+	case r.FormValue("name") == "":
+		httpError(w, "missing required parameter 'name'", 500)
+	default:
+		token := r.FormValue("x-token");
+		name := r.FormValue("name");
+		// ユーザー情報更新
+		if err := database.UpdateUser(token, name); err == nil{
+			// 出力
+			fmt.Fprint(w, `{"status": "success"}`)
+		}else{
+			httpError(w, err.Error(), 500)
+		}
 	}
 }

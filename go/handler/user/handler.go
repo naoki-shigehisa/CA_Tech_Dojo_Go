@@ -1,8 +1,8 @@
-package response
+package handler
 
 import (
 	"bytes"
-	"dojo/database"
+	"dojo/model/user"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -23,7 +23,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 // 全てのユーザーを取得
 func GetUsers(w http.ResponseWriter, r *http.Request) {
 	// ユーザー情報取得
-	users := database.GetUsers()
+	users := model.GetUsers()
 
 	// jsonエンコード
 	var buf bytes.Buffer
@@ -50,7 +50,7 @@ func GetUserByToken(w http.ResponseWriter, r *http.Request) {
 	default:
 		token := r.FormValue("x-token")
 		// userが見つかるがどうかを判定
-		if user, err := database.GetUserByToken(token); err == nil {
+		if user, err := model.GetUserByToken(token); err == nil {
 			// 出力
 			fmt.Fprint(w, `{"name": "`+user.Name+`"}`)
 		} else {
@@ -73,7 +73,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	default:
 		name := r.FormValue("name")
 		// ユーザーを作成
-		token := database.CreateUser(name)
+		token := model.CreateUser(name)
 		// tokenを出力
 		fmt.Fprint(w, `{"token": "`+token+`"}`)
 	}
@@ -95,7 +95,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		token := r.FormValue("x-token")
 		name := r.FormValue("name")
 		// ユーザー情報更新
-		if err := database.UpdateUser(token, name); err == nil {
+		if err := model.UpdateUser(token, name); err == nil {
 			// 出力
 			fmt.Fprint(w, `{"status": "success"}`)
 		} else {

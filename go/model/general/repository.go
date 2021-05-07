@@ -1,4 +1,4 @@
-package database
+package model
 
 import (
 	"fmt"
@@ -7,8 +7,10 @@ import (
 	"time"
 )
 
+var MysqlDb *gorm.DB
+
 // データベースに接続
-func sqlConnect() (database *gorm.DB) {
+func SqlConnect(){
 	DBMS := "mysql"
 	USER := "go_test"
 	PASS := "password"
@@ -37,6 +39,5 @@ func sqlConnect() (database *gorm.DB) {
 		}
 	}
 	fmt.Println("DB接続成功")
-
-	return db
+	MysqlDb = db
 }

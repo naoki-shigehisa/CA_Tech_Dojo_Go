@@ -10,7 +10,7 @@ import (
 var MysqlDb *gorm.DB
 
 // データベースに接続
-func SqlConnect(){
+func SqlConnect() {
 	DBMS := "mysql"
 	USER := "go_test"
 	PASS := "password"

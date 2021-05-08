@@ -1,9 +1,9 @@
 package model
 
 import (
-	"errors"
 	"dojo/controller/user"
 	"dojo/model/general"
+	"errors"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 )

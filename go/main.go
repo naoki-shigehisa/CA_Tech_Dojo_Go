@@ -10,8 +10,6 @@ func main() {
 	// sqlサーバーに接続
 	model.SqlConnect()
 
-	http.HandleFunc("/", handler.Handler)
-
 	// 全てのuserを取得
 	http.HandleFunc("/users", handler.GetUsers)
 	// token指定でuserを取得

@@ -16,10 +16,6 @@ func httpError(w http.ResponseWriter, status string, code int) {
 	fmt.Fprint(w, content)
 }
 
-func Handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Hello, HTTPサーバ")
-}
-
 // 全てのユーザーを取得
 func GetUsers(w http.ResponseWriter, r *http.Request) {
 	// ユーザー情報取得

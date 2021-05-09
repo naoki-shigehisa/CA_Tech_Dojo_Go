@@ -1,10 +1,10 @@
 package model
 
 import (
-	"dojo/controller/user"
 	"dojo/model/general"
 	"errors"
 	"fmt"
+	"github.com/google/uuid"
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -13,16 +13,12 @@ func CreateUser(name string) string {
 	db := model.MysqlDb
 
 	// 重複しないようにtokenを生成
-	token, _ := controller.MakeRandomStr(10)
-	var users []User
-	for db.Where("token = ?", token).Find(&users); len(users) != 0; db.Where("token = ?", token).Find(&users) {
-		token, _ = controller.MakeRandomStr(10)
-	}
+	token, _ := uuid.NewRandom()
 
-	fmt.Println("create user " + name + " with token " + token)
-	db.Create(&User{Token: token, Name: name})
+	fmt.Println("create user " + name + " with token " + token.String())
+	db.Create(&User{Token: token.String(), Name: name})
 
-	return token
+	return token.String()
 }
 
 // ユーザー情報を更新
